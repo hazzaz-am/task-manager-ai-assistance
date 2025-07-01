@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import {
 	Dialog,
@@ -43,9 +43,10 @@ type ModalProps = {
 export default function TaskModal({ id, action }: ModalProps) {
 	const [open, setOpen] = useState(false);
 	const taskReducer = useTask();
-	const editableTask = taskReducer?.taskState?.tasks?.find(
+	let editableTask = taskReducer?.taskState?.tasks?.find(
 		(task) => task.id === id
 	);
+
 	const form = useForm({
 		defaultValues: {
 			title: editableTask?.title || "",
@@ -55,8 +56,17 @@ export default function TaskModal({ id, action }: ModalProps) {
 		},
 	});
 
-	const onSubmit: SubmitHandler<FieldValues> = (formValues) => {
+	// Reset form values when modal opens or editableTask changes
+	useEffect(() => {
+		form.reset({
+			title: editableTask?.title || "",
+			description: editableTask?.description || "",
+			status: editableTask?.status || "",
+			dueDate: editableTask?.dueDate || null,
+		});
+	}, [open, editableTask]);
 
+	const onSubmit: SubmitHandler<FieldValues> = (formValues) => {
 		if (action === "update" && editableTask) {
 			taskReducer?.taskDispatch({
 				type: "EDIT_TASK",

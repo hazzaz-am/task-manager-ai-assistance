@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { TTask } from "@/types";
 import { Loader2Icon, StarsIcon, Trash2 } from "lucide-react";
 import TaskModal from "./TaskModal";
+import { ResultPopup } from "./ResultPopup";
 
 type TaskProps = {
 	task: TTask;
@@ -12,6 +13,7 @@ type TaskProps = {
 export default function TaskCard({ task }: TaskProps) {
 	const taskReducer = useTask();
 	const { id, title, status, description, dueDate } = task;
+
 	return (
 		<div className="border px-5 py-3 rounded-md">
 			<div className="flex justify-between items-center">
@@ -34,13 +36,10 @@ export default function TaskCard({ task }: TaskProps) {
 							<span className="font-bold">DueDate:</span>{" "}
 							{dueDate.toLocaleDateString()}
 						</p>
-						<Button variant={"outline"} color="bg-green-500" className="mt-5">
-							<Loader2Icon className="animate-spin" />
-							Suggest Subtasks
-							<StarsIcon />
-						</Button>
+						<ResultPopup title={title} description={description}/>
 					</div>
 				</div>
+				
 				<div className="flex gap-3 items-center">
 					<TaskModal id={id} action="update" />
 
