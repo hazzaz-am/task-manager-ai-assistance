@@ -20,6 +20,17 @@ Check out the live demo [Click here](https://task-manager-ai-assistance.vercel.a
 ![Interface Preview](/public/preview-1.png)
 ![Interface Preview](/public/preview-2.png)
 
+## Project Breakdown
+
+- **View Tasks**: Displays a list of all tasks with their details.
+- **Add Task**: Allows users to create new tasks with AI assistance for subtasks.
+- **Edit Task**: Users can modify existing tasks.
+- **Delete Task**: Users can remove tasks they no longer need.
+- **AI Assistance**: Uses `Google Gemini API` to suggest subtasks based on the main task title and description.
+- **Error Handling**: Displays `alerts` for API failures.
+- **Form Validation**: Uses `React Hook Form` for managing form state and validation.
+- **Context API**: Utilizes React's `Context API` for state management across components.
+
 ## Tech Stack
 
 - [Next.js](https://nextjs.org/) - React framework for production
