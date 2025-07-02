@@ -16,7 +16,7 @@ export default function Tasks() {
 						? `Total Tasks ${taskReducer?.taskState?.tasks.length}`
 						: `Total Task ${taskReducer?.taskState?.tasks.length}`}
 				</h2>
-				<TaskModal action="add"/>
+				<TaskModal action="add" />
 			</div>
 
 			<div className="space-y-5 mt-5">

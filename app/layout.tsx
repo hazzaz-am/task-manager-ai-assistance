@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import TaskProvider from "@/providers/task-provider";
 import { Toaster } from "@/components/ui/sonner";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					<TaskProvider>
+						<Navbar />
 						{children}
 						<Toaster />
 					</TaskProvider>
