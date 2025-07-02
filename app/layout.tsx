@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Smart Task Manager with AI Assistance",
-	description: "",
+	title: "Task Manager with AI Assistance",
+	description: "Smart Task Manager with AI Assistance",
 };
 
 export default function RootLayout({
