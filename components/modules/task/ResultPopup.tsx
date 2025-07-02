@@ -7,6 +7,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import toastMessage from "@/utils/toast-message";
 
 import { Loader2Icon, StarsIcon } from "lucide-react";
 import { useState } from "react";
@@ -37,11 +38,24 @@ export function ResultPopup({ title, description }: ResultProps) {
 					description,
 				}),
 			});
-			const data = await response.json();
-			setResult(cleanHtml(data.output));
-      setOpen(true)
+			if (response.status === 200) {
+				const data = await response.json();
+				setResult(cleanHtml(data.output));
+			}
+
+			if (response.status === 404) {
+				toastMessage("Not Found");
+				return;
+			}
+			setOpen(true);
 		} catch (error) {
-			console.log(error);
+			if (error instanceof Error) {
+				if (error.message === "Failed to fetch") {
+					toastMessage("Network error. Please check your connection.");
+				}
+			} else {
+				toastMessage("Something Went Wrong");
+			}
 		} finally {
 			setLoading(false);
 		}

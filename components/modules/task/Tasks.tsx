@@ -9,7 +9,7 @@ export default function Tasks() {
 
 	return (
 		<div className="container mx-auto px-5 mt-20">
-			<div className="flex items-center justify-between border-b py-5">
+			<div className="flex items-center justify-between border-b py-5 flex-wrap gap-3">
 				<h2>
 					{taskReducer?.taskState?.tasks?.length &&
 					taskReducer?.taskState?.tasks?.length > 1

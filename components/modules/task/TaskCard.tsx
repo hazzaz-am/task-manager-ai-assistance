@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import useTask from "@/hooks/useTask";
-import { cn } from "@/lib/utils";
 import { TTask } from "@/types";
-import { Loader2Icon, StarsIcon, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import TaskModal from "./TaskModal";
 import { ResultPopup } from "./ResultPopup";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
 
 type TaskProps = {
 	task: TTask;
@@ -16,30 +17,38 @@ export default function TaskCard({ task }: TaskProps) {
 
 	return (
 		<div className="border px-5 py-3 rounded-md">
-			<div className="flex justify-between items-center">
+			<div className="flex justify-between items-center flex-wrap gap-3">
 				<div className="flex gap-2">
-					<div
-						className={cn(
-							"size-3 rounded-full mt-2",
-							status === "completed" && "bg-green-500",
-							status === "pending" && "bg-yellow-500"
-						)}
-					></div>
 					<div>
-						<h1>
-							<span className="font-bold">Title:</span> {title}
-						</h1>
+						<div className="flex items-center gap-2 flex-wrap-reverse">
+							<h1 className="font-bold">Title:</h1> {title}
+							{status === "pending" ? (
+								<Badge
+									variant="secondary"
+									className="bg-yellow-500 text-white dark:bg-yellow-600"
+								>
+									Pending
+								</Badge>
+							) : (
+								<Badge
+									variant="secondary"
+									className="bg-green-500 text-white dark:bg-green-600"
+								>
+									Completed
+								</Badge>
+							)}
+						</div>
 						<p>
 							<span className="font-bold">Description:</span> {description}
 						</p>
 						<p>
 							<span className="font-bold">DueDate:</span>{" "}
-							{dueDate.toLocaleDateString()}
+							{dueDate && format(dueDate, "PPP")}
 						</p>
-						<ResultPopup title={title} description={description}/>
+						<ResultPopup title={title} description={description} />
 					</div>
 				</div>
-				
+
 				<div className="flex gap-3 items-center">
 					<TaskModal id={id} action="update" />
 

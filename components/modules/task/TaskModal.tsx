@@ -16,6 +16,7 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
+	FormMessage,
 } from "../../ui/form";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "../../ui/input";
@@ -43,7 +44,7 @@ type ModalProps = {
 export default function TaskModal({ id, action }: ModalProps) {
 	const [open, setOpen] = useState(false);
 	const taskReducer = useTask();
-	let editableTask = taskReducer?.taskState?.tasks?.find(
+	const editableTask = taskReducer?.taskState?.tasks?.find(
 		(task) => task.id === id
 	);
 
@@ -52,7 +53,7 @@ export default function TaskModal({ id, action }: ModalProps) {
 			title: editableTask?.title || "",
 			description: editableTask?.description || "",
 			status: editableTask?.status || "",
-			dueDate: editableTask?.dueDate || null,
+			dueDate: editableTask?.dueDate || undefined,
 		},
 	});
 
@@ -62,7 +63,7 @@ export default function TaskModal({ id, action }: ModalProps) {
 			title: editableTask?.title || "",
 			description: editableTask?.description || "",
 			status: editableTask?.status || "",
-			dueDate: editableTask?.dueDate || null,
+			dueDate: editableTask?.dueDate || undefined,
 		});
 	}, [open, editableTask]);
 
@@ -120,8 +121,16 @@ export default function TaskModal({ id, action }: ModalProps) {
 								<FormItem>
 									<FormLabel>Title</FormLabel>
 									<FormControl>
-										<Input {...field} />
+										<Input
+											{...field}
+											{...form.register("title", {
+												required: "Title is required",
+											})}
+										/>
 									</FormControl>
+									<FormMessage>
+										{form.formState.errors.title?.message}
+									</FormMessage>
 								</FormItem>
 							)}
 						/>
@@ -132,8 +141,16 @@ export default function TaskModal({ id, action }: ModalProps) {
 								<FormItem>
 									<FormLabel>Description</FormLabel>
 									<FormControl>
-										<Textarea {...field} />
+										<Textarea
+											{...field}
+											{...form.register("description", {
+												required: "Description is required",
+											})}
+										/>
 									</FormControl>
+									<FormMessage>
+										{form.formState.errors.description?.message}
+									</FormMessage>
 								</FormItem>
 							)}
 						/>
@@ -146,6 +163,9 @@ export default function TaskModal({ id, action }: ModalProps) {
 									<Select
 										onValueChange={field.onChange}
 										defaultValue={field.value}
+										{...form.register("status", {
+											required: "Select one status",
+										})}
 									>
 										<FormControl className="w-full">
 											<SelectTrigger>
@@ -157,45 +177,60 @@ export default function TaskModal({ id, action }: ModalProps) {
 											<SelectItem value="completed">Completed</SelectItem>
 										</SelectContent>
 									</Select>
+									<FormMessage>
+										{form.formState.errors.status?.message}
+									</FormMessage>
 								</FormItem>
 							)}
 						/>
 						<FormField
 							control={form.control}
+							rules={{ required: "Please select a due date" }}
 							name="dueDate"
-							render={({ field }) => (
-								<FormItem className="flex flex-col">
-									<FormLabel>Due Date</FormLabel>
-									<Popover>
-										<PopoverTrigger asChild>
-											<FormControl>
-												<Button
-													variant={"outline"}
+							render={({ field }) => {
+								const hasError = form.formState.errors.dueDate;
+								return (
+									<FormItem className="flex flex-col">
+										<FormLabel className={hasError ? "text-destructive" : ""}>
+											Due Date
+										</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl
 													className={cn(
-														"pl-3 text-left font-normal",
-
-														!field.value && "text-muted-foreground"
+														"border",
+														hasError && "border-destructive!"
 													)}
 												>
-													{field.value ? (
-														format(field.value, "PPP")
-													) : (
-														<span>Pick a date</span>
-													)}
-													<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-												</Button>
-											</FormControl>
-										</PopoverTrigger>
-										<PopoverContent className="w-auto p-0" align="start">
-											<Calendar
-												mode="single"
-												onSelect={field.onChange}
-												captionLayout="dropdown"
-											/>
-										</PopoverContent>
-									</Popover>
-								</FormItem>
-							)}
+													<Button
+														variant={"outline"}
+														className={cn(
+															"pl-3 text-left font-normal border",
+															!field.value && "text-muted-foreground"
+														)}
+													>
+														{field.value ? (
+															format(field.value, "PPP")
+														) : (
+															<span>Pick a date</span>
+														)}
+														<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="single"
+													selected={field.value}
+													onSelect={field.onChange}
+													captionLayout="dropdown"
+												/>
+											</PopoverContent>
+										</Popover>
+										<FormMessage>{hasError?.message}</FormMessage>
+									</FormItem>
+								);
+							}}
 						/>
 						<DialogFooter>
 							<Button type="submit">{editableTask ? "Update" : "Add"}</Button>
